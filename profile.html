@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile - BGB Bakehouse</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <style>
+        .auth-container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+        .auth-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        .auth-form label {
+            display: flex;
+            flex-direction: column;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .auth-form input {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-top: 6px;
+            font-family: inherit;
+        }
+        .auth-form input[readonly] {
+            background-color: #f5f5f5;
+            color: #666;
+            cursor: not-allowed;
+        }
+        .auth-message {
+            grid-column: 1 / -1;
+            font-size: 14px;
+            text-align: center;
+        }
+        .auth-message.error {
+            color: #d32f2f;
+        }
+        .auth-message.success {
+            color: #2e7d32;
+        }
+        .form-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 16px;
+            margin-top: 10px;
+        }
+        .form-actions button {
+            flex: 1;
+        }
+    </style>
+    <script>
+        // Check if user is authenticated before fully loading
+        fetch('api/check_auth.php')
+            .then(r => r.json())
+            .then(data => {
+                if (!data.authenticated) {
+                    window.location.href = 'login.html';
+                }
+            })
+            .catch(() => {
+                window.location.href = 'login.html';
+            });
+    </script>
+</head>
+<body>
+    <div class="page-shell">
+        <header class="subpage-header">
+            <nav class="navbar container" aria-label="Primary navigation">
+                <a class="brand" href="index.html">
+                    <img class="brand-logo" src="images/IMG_7322-removebg-preview.png" alt="BGB Bakehouse logo" />
+                    <span>Batter Goes Blop!</span>
+                </a>
+                <div class="nav-links">
+                    <a href="index.html">Home</a>
+                    <a href="menu.html">Menu</a>
+                    <a href="about.html">About Us</a>
+                    <a href="#faq">FAQ</a>
+                </div>
+                <div class="nav-actions">
+                    <a class="cart-pill" href="order.html">Cart <span data-cart-count>0</span></a>
+                    <a class="button button-dark nav-profile" href="profile.html">Profile</a>
+                </div>
+            </nav>
+            <section class="menu-hero container" style="text-align: center;">
+                <h1>My Profile</h1>
+                <p>Manage your personal details and delivery addresses.</p>
+            </section>
+        </header>
+
+        <main class="container">
+            <div class="auth-container">
+                <form class="auth-form" id="profileForm">
+                    <label class="full-width">Email Address (Read-only)
+                        <input type="email" name="CUST_EMAIL" id="CUST_EMAIL" readonly />
+                    </label>
+
+                    <label class="full-width">Full Name
+                        <input type="text" name="CUST_NAME" id="CUST_NAME" required placeholder="John Doe" />
+                    </label>
+                    
+                    <label class="full-width">Phone Number
+                        <input type="tel" name="CUST_NOPHONE" id="CUST_NOPHONE" required placeholder="0123456789" />
+                    </label>
+                    
+                    <label class="full-width">Address Line 1
+                        <input type="text" name="CUST_ADDRESS1" id="CUST_ADDRESS1" required placeholder="House/Unit Number, Street" />
+                    </label>
+                    
+                    <label class="full-width">Address Line 2 (Optional)
+                        <input type="text" name="CUST_ADDRESS2" id="CUST_ADDRESS2" placeholder="Building, Area" />
+                    </label>
+                    
+                    <label>Postcode
+                        <input type="text" name="CUST_POSTCODE" id="CUST_POSTCODE" required placeholder="e.g. 50000" />
+                    </label>
+                    
+                    <label>State
+                        <input type="text" name="CUST_STATE" id="CUST_STATE" required placeholder="e.g. Kuala Lumpur" />
+                    </label>
+
+                    <div class="form-actions">
+                        <button class="button button-dark" type="submit">Save Changes</button>
+                        <button class="button button-light" type="button" id="logoutBtn" style="color: #d32f2f; border-color: #d32f2f;">Logout</button>
+                    </div>
+                    <p class="auth-message full-width" id="profileMessage"></p>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const msgEl = document.getElementById('profileMessage');
+
+            // Load profile data
+            fetch('api/profile_details.php')
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && data.user) {
+                        document.getElementById('CUST_EMAIL').value = data.user.email || '';
+                        document.getElementById('CUST_NAME').value = data.user.name || '';
+                        document.getElementById('CUST_NOPHONE').value = data.user.phone || '';
+                        document.getElementById('CUST_ADDRESS1').value = data.user.address1 || '';
+                        document.getElementById('CUST_ADDRESS2').value = data.user.address2 || '';
+                        document.getElementById('CUST_POSTCODE').value = data.user.postcode || '';
+                        document.getElementById('CUST_STATE').value = data.user.state || '';
+                    } else {
+                        msgEl.textContent = 'Could not load profile details.';
+                        msgEl.className = 'auth-message error';
+                    }
+                })
+                .catch(err => {
+                    msgEl.textContent = 'Failed to fetch profile.';
+                    msgEl.className = 'auth-message error';
+                });
+
+            // Handle form submission
+            document.getElementById('profileForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                
+                msgEl.textContent = 'Saving...';
+                msgEl.className = 'auth-message';
+                
+                fetch('api/update_profile.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => res.json().then(data => ({status: res.status, body: data})))
+                .then(res => {
+                    if (res.status === 200) {
+                        msgEl.textContent = 'Profile updated successfully!';
+                        msgEl.className = 'auth-message success';
+                    } else {
+                        msgEl.textContent = res.body.error || 'Failed to update profile';
+                        msgEl.className = 'auth-message error';
+                    }
+                })
+                .catch(err => {
+                    msgEl.textContent = 'An error occurred while saving.';
+                    msgEl.className = 'auth-message error';
+                });
+            });
+
+            // Handle logout
+            document.getElementById('logoutBtn').addEventListener('click', function() {
+                if (confirm('Are you sure you want to log out?')) {
+                    fetch('api/logout.php')
+                        .then(() => {
+                            window.location.href = 'index.html';
+                        })
+                        .catch(() => {
+                            window.location.href = 'index.html';
+                        });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

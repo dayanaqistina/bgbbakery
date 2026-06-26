@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register - BGB Bakehouse</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <style>
+        .auth-container {
+            max-width: 500px;
+            margin: 40px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+        .auth-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        .auth-form label {
+            display: flex;
+            flex-direction: column;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .auth-form input {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-top: 6px;
+            font-family: inherit;
+        }
+        .auth-message {
+            grid-column: 1 / -1;
+            font-size: 14px;
+            text-align: center;
+        }
+        .auth-message.error {
+            color: #d32f2f;
+        }
+        .auth-message.success {
+            color: #2e7d32;
+        }
+        .auth-links {
+            grid-column: 1 / -1;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        .auth-links a {
+            color: #d35400;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-shell">
+        <header class="subpage-header">
+            <nav class="navbar container" aria-label="Primary navigation">
+                <a class="brand" href="index.html">
+                    <img class="brand-logo" src="images/IMG_7322-removebg-preview.png" alt="BGB Bakehouse logo" />
+                    <span>Batter Goes Blop!</span>
+                </a>
+                <div class="nav-links">
+                    <a href="index.html">Home</a>
+                    <a href="menu.html">Menu</a>
+                    <a href="about.html">About Us</a>
+                    <a href="#faq">FAQ</a>
+                </div>
+            </nav>
+            <section class="menu-hero container" style="text-align: center;">
+                <h1>Register</h1>
+                <p>Create an account to quickly place orders.</p>
+            </section>
+        </header>
+
+        <main class="container">
+            <div class="auth-container">
+                <form class="auth-form" id="registerForm">
+                    <label class="full-width">Full Name
+                        <input type="text" name="CUST_NAME" required placeholder="John Doe" />
+                    </label>
+                    
+                    <label>Phone Number
+                        <input type="tel" name="CUST_NOPHONE" required placeholder="0123456789" />
+                    </label>
+                    <label>Email Address
+                        <input type="email" name="CUST_EMAIL" required placeholder="name@email.com" />
+                    </label>
+                    
+                    <label class="full-width">Password
+                        <div style="position: relative; display: flex; align-items: center;">
+                            <input type="password" id="registerPassword" name="CUST_PASSWORD" required placeholder="Create a strong password" style="width: 100%; box-sizing: border-box; padding-right: 40px;" />
+                            <button type="button" id="toggleRegisterPassword" style="position: absolute; right: 10px; background: none; border: none; cursor: pointer; font-size: 18px; padding: 0;">
+                                👁️
+                            </button>
+                        </div>
+                    </label>
+                    
+                    <label class="full-width">Address Line 1
+                        <input type="text" name="CUST_ADDRESS1" required placeholder="House/Unit Number, Street" />
+                    </label>
+                    
+                    <label class="full-width">Address Line 2 (Optional)
+                        <input type="text" name="CUST_ADDRESS2" placeholder="Building, Area" />
+                    </label>
+                    
+                    <label>Postcode
+                        <input type="text" name="CUST_POSTCODE" required placeholder="e.g. 50000" />
+                    </label>
+                    
+                    <label>State
+                        <input type="text" name="CUST_STATE" required placeholder="e.g. Kuala Lumpur" />
+                    </label>
+
+                    <div class="full-width" style="margin-top: 10px;">
+                        <button class="button button-dark" type="submit" style="width: 100%;">Create Account</button>
+                    </div>
+                    <p class="auth-message full-width" id="registerMessage"></p>
+                </form>
+                
+                <div class="auth-links">
+                    Already have an account? <a href="login.html">Login here</a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Toggle Password Visibility
+        const togglePassword = document.getElementById('toggleRegisterPassword');
+        const passwordInput = document.getElementById('registerPassword');
+        
+        togglePassword.addEventListener('click', function (e) {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            // Optional: change icon based on state
+            this.textContent = type === 'password' ? '👁️' : '🙈';
+        });
+
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const msgEl = document.getElementById('registerMessage');
+            
+            msgEl.textContent = 'Registering...';
+            msgEl.className = 'auth-message';
+            
+            fetch('api/register.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json().then(data => ({status: res.status, body: data})))
+            .then(res => {
+                if (res.status === 200) {
+                    msgEl.textContent = 'Registration successful! Redirecting to login...';
+                    msgEl.className = 'auth-message success';
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                } else {
+                    msgEl.textContent = res.body.error || 'Registration failed';
+                    msgEl.className = 'auth-message error';
+                }
+            })
+            .catch(err => {
+                msgEl.textContent = 'An error occurred. Please try again.';
+                msgEl.className = 'auth-message error';
+            });
+        });
+    </script>
+</body>
+</html>

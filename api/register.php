@@ -40,10 +40,17 @@ try {
         exit;
     }
 
-    $sql = "INSERT INTO CUSTOMER (CUST_NAME, CUST_NOPHONE, CUST_EMAIL, CUST_PASSWORD, CUST_ADDRESS1, CUST_ADDRESS2, CUST_POSTCODE, CUST_STATE) 
-            VALUES (:name, :phone, :email, :password, :address1, :address2, :postcode, :state)";
+    // Generate new CUST_ID formatted as 00001, 00002...
+    $id_stmt = oci_parse($conn, "SELECT NVL(MAX(TO_NUMBER(CUST_ID)), 0) + 1 AS NEXT_ID FROM CUSTOMER");
+    oci_execute($id_stmt);
+    $id_row = oci_fetch_assoc($id_stmt);
+    $new_cust_id = str_pad($id_row['NEXT_ID'], 5, '0', STR_PAD_LEFT);
+
+    $sql = "INSERT INTO CUSTOMER (CUST_ID, CUST_NAME, CUST_NOPHONE, CUST_EMAIL, CUST_PASSWORD, CUST_ADDRESS1, CUST_ADDRESS2, CUST_POSTCODE, CUST_STATE) 
+            VALUES (:cust_id, :name, :phone, :email, :password, :address1, :address2, :postcode, :state)";
     
     $stmt = oci_parse($conn, $sql);
+    oci_bind_by_name($stmt, ':cust_id', $new_cust_id);
     oci_bind_by_name($stmt, ':name', $name);
     oci_bind_by_name($stmt, ':phone', $phone);
     oci_bind_by_name($stmt, ':email', $email);

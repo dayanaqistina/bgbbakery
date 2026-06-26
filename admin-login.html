@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Login - BGB Bakehouse</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <style>
+        .auth-container {
+            max-width: 400px;
+            margin: 40px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .auth-form label {
+            display: flex;
+            flex-direction: column;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .auth-form input {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-top: 6px;
+            font-family: inherit;
+        }
+        .auth-message {
+            color: #d32f2f;
+            font-size: 14px;
+            text-align: center;
+        }
+        .admin-badge {
+            display: inline-block;
+            background: #222;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-shell">
+        <header class="subpage-header">
+            <nav class="navbar container" aria-label="Primary navigation">
+                <a class="brand" href="index.html">
+                    <img class="brand-logo" src="images/IMG_7322-removebg-preview.png" alt="BGB Bakehouse logo" />
+                    <span>Batter Goes Blop!</span>
+                </a>
+                <div class="nav-links">
+                    <a href="index.html">Home</a>
+                    <a href="menu.html">Menu</a>
+                    <a href="about.html">About Us</a>
+                    <a href="#faq">FAQ</a>
+                </div>
+            </nav>
+            <section class="menu-hero container" style="text-align: center;">
+                <span class="admin-badge">Admin Portal</span>
+                <h1>Staff Login</h1>
+                <p>Welcome back! Please login to access the admin dashboard.</p>
+            </section>
+        </header>
+
+        <main class="container">
+            <div class="auth-container">
+                <form class="auth-form" id="adminLoginForm">
+                    <label>Email Address
+                        <input type="email" name="WORKER_EMAIL" required placeholder="admin@battergoesblop.com" />
+                    </label>
+                    <label>Password
+                        <div style="position: relative; display: flex; align-items: center;">
+                            <input type="password" id="loginPassword" name="WORKER_PASSWORD" required placeholder="Enter password" style="width: 100%; box-sizing: border-box; padding-right: 40px;" />
+                            <button type="button" id="toggleLoginPassword" style="position: absolute; right: 10px; background: none; border: none; cursor: pointer; font-size: 18px; padding: 0;">
+                                👁️
+                            </button>
+                        </div>
+                    </label>
+                    
+                    <button class="button button-dark" type="submit" style="width: 100%; margin-top: 10px;">Login to Dashboard</button>
+                    <p class="auth-message" id="loginMessage"></p>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Toggle Password Visibility
+        const togglePassword = document.getElementById('toggleLoginPassword');
+        const passwordInput = document.getElementById('loginPassword');
+        
+        togglePassword.addEventListener('click', function (e) {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.textContent = type === 'password' ? '👁️' : '🙈';
+        });
+
+        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            
+            fetch('api/admin-login.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json().then(data => ({status: res.status, body: data})))
+            .then(res => {
+                if (res.status === 200) {
+                    window.location.href = 'admin.html';
+                } else {
+                    document.getElementById('loginMessage').textContent = res.body.error || 'Login failed';
+                }
+            })
+            .catch(err => {
+                document.getElementById('loginMessage').textContent = 'An error occurred. Please try again.';
+            });
+        });
+    </script>
+</body>
+</html>

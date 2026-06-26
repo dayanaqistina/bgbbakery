@@ -5,8 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard - BGB Bakehouse</title>
     <link rel="stylesheet" href="css/styles.css" />
+    <script>
+        // Check admin authentication before showing the page
+        fetch('api/check-admin.php')
+            .then(res => res.json())
+            .then(data => {
+                if (!data.is_admin) {
+                    window.location.href = 'admin-login.html';
+                } else {
+                    document.body.style.display = 'block';
+                    if (data.worker_name) {
+                        document.getElementById('adminNameLabel').textContent = 'Hi, ' + data.worker_name;
+                    }
+                }
+            })
+            .catch(() => {
+                window.location.href = 'admin-login.html';
+            });
+    </script>
 </head>
-<body class="admin-body">
+<body class="admin-body" style="display: none;">
     <div class="admin-layout">
         <aside class="admin-sidebar">
             <img class="admin-logo" src="images/IMG_7322-removebg-preview.png" alt="BGB Bakehouse logo" />
@@ -22,10 +40,13 @@
         <main class="admin-main" id="dashboard">
             <header class="admin-topbar">
                 <div>
-                    <p class="eyebrow">Admin</p>
+                    <p class="eyebrow" id="adminNameLabel">Admin</p>
                     <h1>Dashboard</h1>
                 </div>
-                <a class="button button-dark" href="index.html">View site</a>
+                <div style="display: flex; gap: 10px;">
+                    <a class="button button-dark" href="index.html">View site</a>
+                    <button class="button button-light" id="adminLogoutBtn">Logout</button>
+                </div>
             </header>
 
             <section class="admin-metrics">
@@ -67,5 +88,14 @@
             </section>
         </main>
     </div>
+
+    <script>
+        document.getElementById('adminLogoutBtn').addEventListener('click', function() {
+            fetch('api/admin-logout.php')
+                .then(() => {
+                    window.location.href = 'admin-login.html';
+                });
+        });
+    </script>
 </body>
 </html>

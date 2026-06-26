@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard - BGB Bakehouse</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body class="admin-body">
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <img class="admin-logo" src="/images/IMG_7322-removebg-preview.png" alt="BGB Bakehouse logo" />
+            <nav>
+                <a class="active" href="#dashboard">Dashboard</a>
+                <a href="#orders">Orders</a>
+                <a href="#customers">Customers</a>
+                <a href="#products">Products</a>
+                <a href="#reports">Reports</a>
+            </nav>
+        </aside>
+
+        <main class="admin-main" id="dashboard">
+            <header class="admin-topbar">
+                <div>
+                    <p class="eyebrow">Admin</p>
+                    <h1>Dashboard</h1>
+                </div>
+                <a class="button button-dark" href="/">View site</a>
+            </header>
+
+            <section class="admin-metrics">
+                <article><span>Total orders</span><strong>8</strong></article>
+                <article><span>Pending orders</span><strong>5</strong></article>
+                <article><span>Completed orders</span><strong>3</strong></article>
+                <article><span>Today's revenue</span><strong>RM620</strong></article>
+            </section>
+
+            <section class="admin-panels">
+                <article class="admin-panel" id="orders">
+                    <div class="panel-heading">
+                        <h2>Recent orders</h2>
+                        <button class="button button-light" type="button">New order</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr><th>Order ID</th><th>Customer</th><th>Type</th><th>Total</th><th>Status</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>ORD00045</td><td>Aina</td><td>Delivery</td><td>RM97.00</td><td><span class="status pending">Pending</span></td></tr>
+                            <tr><td>ORD00044</td><td>Sara</td><td>Pickup</td><td>RM85.00</td><td><span class="status ready">Ready</span></td></tr>
+                            <tr><td>ORD00043</td><td>Amirul</td><td>Delivery</td><td>RM120.00</td><td><span class="status baking">Baking</span></td></tr>
+                        </tbody>
+                    </table>
+                </article>
+
+                <article class="admin-panel" id="reports">
+                    <h2>Sales snapshot</h2>
+                    <div class="report-bars" aria-label="Revenue chart">
+                        <span style="height: 38%"></span>
+                        <span style="height: 52%"></span>
+                        <span style="height: 66%"></span>
+                        <span style="height: 78%"></span>
+                        <span style="height: 92%"></span>
+                    </div>
+                    <p>Monthly revenue: <strong>RM5,680</strong></p>
+                </article>
+            </section>
+        </main>
+    </div>
+</body>
+</html>

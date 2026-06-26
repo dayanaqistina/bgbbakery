@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BGB Bakehouse</title>
+    <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+    <div class="page-shell">
+        <div class="top-banner">Freshly baked in small batches. Orders open every Monday.</div>
+
+        <header class="site-header" id="home">
+            <nav class="navbar container" aria-label="Primary navigation">
+                <a class="brand" href="/">
+                    <img class="brand-logo" src="/images/IMG_7322-removebg-preview.png" alt="BGB Bakehouse logo" />
+                    <span>Batter Goes Blop!</span>
+                </a>
+                <div class="nav-links">
+                    <a class="active" href="/">Home</a>
+                    <a href="/menu.html">Menu</a>
+                    <a href="/about.html">About Us</a>
+                    <a href="#faq">FAQ</a>
+                </div>
+                <div class="nav-actions">
+                    <a class="cart-pill" href="/order.html">Cart <span data-cart-count>0</span></a>
+                    <a class="button button-dark nav-order" href="/order.html">Order Now</a>
+                </div>
+            </nav>
+
+            <section class="hero container">
+                <div class="hero-copy">
+                    <p class="paper-tag">Freshly baked</p>
+                    <h1>Bakes that make you go <span>Blop!</span></h1>
+                    <p>Homemade treats baked fresh in small batches with big flavours and a whole lot of love.</p>
+                    <div class="hero-actions">
+                        <a class="button button-dark" href="/menu.html">View menu</a>
+                        <a class="button button-light" href="/order.html">Order now</a>
+                    </div>
+                </div>
+                <div class="hero-art">
+                    <img class="hero-product photo-hero" src="/images/bakes/banana-muffins.jpeg" alt="Banana chocolate chip walnut muffins" />
+                    <img class="hero-mascot" src="/images/9e14e87e-a917-4ca7-a6d3-c5e22e8982e1-removebg-preview.png" alt="BGB mascot" />
+                    <span class="sticker sticker-dark">Best seller</span>
+                    <span class="sticker sticker-light">Fresh batch</span>
+                    <span class="doodle doodle-star" aria-hidden="true"></span>
+                    <span class="doodle doodle-heart" aria-hidden="true"></span>
+                </div>
+            </section>
+        </header>
+
+        <main>
+            <section class="how-strip">
+                <div class="container steps-grid">
+                    <article class="step-card">
+                        <span>1</span>
+                        <h3>Choose</h3>
+                        <p>Pick your favourite treats from the menu.</p>
+                    </article>
+                    <article class="step-card">
+                        <span>2</span>
+                        <h3>Confirm</h3>
+                        <p>Send your details and preferred date.</p>
+                    </article>
+                    <article class="step-card">
+                        <span>3</span>
+                        <h3>We bake</h3>
+                        <p>Everything is made fresh in small batches.</p>
+                    </article>
+                    <article class="step-card">
+                        <span>4</span>
+                        <h3>Pickup / delivery</h3>
+                        <p>Collect your bakes or have them sent over.</p>
+                    </article>
+                </div>
+            </section>
+
+            <section class="category-section" aria-labelledby="category-title">
+                <div class="category-strip container">
+                    <h2 id="category-title">Shop by category</h2>
+                    <a class="category-chip" href="/menu.html#cupcakes" aria-label="Cupcakes and muffins">
+                        <img src="/images/categories/muffin.png" alt="" />
+                    </a>
+                    <a class="category-chip" href="/menu.html#brownies" aria-label="Brownies">
+                        <img src="/images/categories/brownies.png" alt="" />
+                    </a>
+                    <a class="category-chip" href="/menu.html#cakes" aria-label="Cheesecake">
+                        <img src="/images/categories/cheesecake.png" alt="" />
+                    </a>
+                    <a class="category-chip" href="/menu.html" aria-label="Other treats">
+                        <img src="/images/categories/others.png" alt="" />
+                    </a>
+                </div>
+            </section>
+
+            <section class="featured-section" id="menu">
+                <div class="section-heading container">
+                    <div>
+                        <p class="eyebrow">Today's blops</p>
+                        <h2>Featured treats</h2>
+                    </div>
+                    <a class="text-link" href="/menu.html">View all menu</a>
+                </div>
+
+                <div class="featured-grid container">
+                    <article class="menu-card" data-category="loaves">
+                        <span class="badge badge-orange">Best seller</span>
+                        <img class="menu-image photo-image" src="/images/bakes/banana-muffins.jpeg" alt="Banana chocolate chip walnut muffins" />
+                        <div class="menu-copy">
+                            <h3>Banana Chocolate Chip Walnut Muffin</h3>
+                            <p>Soft banana muffin with chocolate chips and crunchy walnut topping.</p>
+                            <strong>RM75 / RM150</strong>
+                            <button class="button button-dark" type="button" data-product="Banana Chocolate Chip Walnut Muffin">Add to cart</button>
+                        </div>
+                    </article>
+                    <article class="menu-card" data-category="cupcakes">
+                        <img class="menu-image photo-image" src="/images/bakes/chocolate-cupcakes.jpeg" alt="Chocolate cupcakes" />
+                        <div class="menu-copy">
+                            <h3>Chocolate Cupcake</h3>
+                            <p>Rich chocolate cupcake with smooth ganache frosting.</p>
+                            <strong>RM48 / 6 pcs</strong>
+                            <button class="button button-dark" type="button" data-product="Chocolate Cupcake">Add to cart</button>
+                        </div>
+                    </article>
+                    <article class="menu-card" data-category="brownies">
+                        <span class="badge badge-green">Toppings</span>
+                        <img class="menu-image photo-image" src="/images/bakes/fudgy-brownies.jpeg" alt="Fudgy brownies" />
+                        <div class="menu-copy">
+                            <h3>Fudgy Brownies</h3>
+                            <p>Dense chocolate brownies with topping options.</p>
+                            <strong>RM42 - RM65</strong>
+                            <button class="button button-dark" type="button" data-product="Fudgy Brownies">Add to cart</button>
+                        </div>
+                    </article>
+                    <article class="menu-card" data-category="cakes">
+                        <img class="menu-image photo-image" src="/images/bakes/orange-buttercake.jpeg" alt="Orange buttercake" />
+                        <div class="menu-copy">
+                            <h3>Orange Buttercake</h3>
+                            <p>Buttery, soft and fragrant with real orange zest.</p>
+                            <strong>RM45</strong>
+                            <button class="button button-dark" type="button" data-product="Orange Buttercake">Add to cart</button>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="story-section container">
+                <div class="story-photo">
+                    <img src="/images/IMG_7321__1_-removebg-preview.png" alt="BGB baker holding fresh bakes" />
+                    <span class="sticker sticker-dark">Small batches, big love</span>
+                </div>
+                <div class="story-copy">
+                    <p class="eyebrow">About us</p>
+                    <h2>How the batter went Blop</h2>
+                    <p>It started in a tiny kitchen with a lot of butter, a bigger love for bakes, and the occasional "blop" moment. From humble batches for friends to your everyday treat, BGB is here to spread joy one bite at a time.</p>
+                    <a class="button button-dark" href="/about.html">Our story</a>
+                </div>
+            </section>
+
+            <section class="instagram-strip">
+                <div class="container">
+                    <div class="section-heading">
+                        <div>
+                            <p class="eyebrow">From our kitchen</p>
+                            <h2>Fresh from BGB</h2>
+                        </div>
+                        <p class="social-note">Tag us @battergoesblop</p>
+                    </div>
+                    <div class="insta-grid">
+                        <img src="/images/bakes/banana-muffins.jpeg" alt="Banana muffins" />
+                        <img src="/images/bakes/chocolate-cupcakes.jpeg" alt="Chocolate cupcakes" />
+                        <img src="/images/bakes/fudgy-brownies.jpeg" alt="Fudgy brownies" />
+                        <img src="/images/bakes/orange-buttercake.jpeg" alt="Orange buttercake" />
+                        <img src="/images/bakes/cake-squares.jpeg" alt="Fresh cake squares" />
+                    </div>
+                </div>
+            </section>
+
+            <section class="faq-section container" id="faq">
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">FAQ</p>
+                        <h2>Quick answers</h2>
+                    </div>
+                </div>
+                <div class="faq-grid">
+                    <article>
+                        <h3>When should I order?</h3>
+                        <p>Orders should be placed in advance so we can bake fresh for your slot.</p>
+                    </article>
+                    <article>
+                        <h3>Pickup or delivery?</h3>
+                        <p>You can choose either option when sending your order details.</p>
+                    </article>
+                    <article>
+                        <h3>Can I customise?</h3>
+                        <p>Some bakes support topping options. Add your request in the order notes.</p>
+                    </article>
+                </div>
+            </section>
+
+            <section class="order-section container">
+                <div class="order-card">
+                    <h2>Ready to order?</h2>
+                    <p>Reserve your treats and choose pickup or delivery. We will confirm availability before baking.</p>
+                    <div class="shop-actions">
+                        <a class="button button-dark" href="/order.html">Start order</a>
+                        <a class="button button-light" href="https://wa.me/60123456789">WhatsApp</a>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <div class="footer-content container">
+                <div>
+                    <img class="footer-logo" src="/images/IMG_7322-removebg-preview.png" alt="BGB Bakehouse logo" />
+                    <p>Bakes that make you go blop.</p>
+                </div>
+                <div class="footer-links">
+                    <a href="/menu.html">Menu</a>
+                    <a href="/order.html">Order</a>
+                    <a href="/about.html">About Us</a>
+                    <a href="/admin.html">Admin</a>
+                </div>
+                <div class="footer-contact">
+                    <span>hello@battergoesblop.com</span>
+                    <span>+60 12-345 6789</span>
+                    <span>Kuala Lumpur, Malaysia</span>
+                </div>
+            </div>
+            <div class="footer-bottom">&copy; 2026 BGB Bakehouse. All rights reserved.</div>
+        </footer>
+    </div>
+    <script src="/js/app.js"></script>
+</body>
+</html>

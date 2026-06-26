@@ -1,0 +1,13 @@
+package com.bgb.bgbbakery;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class BgbbakeryApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(BgbbakeryApplication.class, args);
+	}
+
+}

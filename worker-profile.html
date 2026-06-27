@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Worker Profile - BGB Bakehouse</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <style>
+        .profile-card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            max-width: 600px;
+            margin-top: 20px;
+        }
+        .profile-form {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        .profile-form label {
+            display: flex;
+            flex-direction: column;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .profile-form input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-top: 5px;
+            font-family: inherit;
+        }
+        .image-preview-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .image-preview-container img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #eee;
+            margin-bottom: 10px;
+        }
+        .status-message {
+            margin-top: 15px;
+            font-size: 14px;
+            text-align: center;
+        }
+        .status-message.success { color: #2e7d32; }
+        .status-message.error { color: #d32f2f; }
+    </style>
+    <script>
+        fetch('api/check-admin.php')
+            .then(res => res.json())
+            .then(data => {
+                if (!data.is_admin) {
+                    window.location.href = 'admin-login.html';
+                } else {
+                    document.body.style.display = 'block';
+                    if (data.worker_name) {
+                        document.getElementById('sidebarAdminName').textContent = data.worker_name;
+                    }
+                }
+            })
+            .catch(() => {
+                window.location.href = 'admin-login.html';
+            });
+    </script>
+</head>
+<body class="admin-body" style="display: none;">
+<div class="admin-layout">
+    <aside class="admin-sidebar">
+        <img class="admin-logo" src="images/IMG_7322-removebg-preview.png" alt="BGB Bakehouse logo" />
+        <nav>
+            <a href="admin.html#dashboard">Dashboard</a>
+            <a href="admin.html#orders">Orders</a>
+            <a href="admin.html#customers">Customers</a>
+            <a href="admin.html#products">Products</a>
+            <a href="admin.html#reports">Reports</a>
+            <a class="active" href="worker-profile.html">My Profile</a>
+        </nav>
+    </aside>
+
+    <main class="admin-main">
+        <header class="admin-topbar">
+            <div>
+                <p class="eyebrow" id="sidebarAdminName">Admin</p>
+                <h1>Edit Profile</h1>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <a class="button button-dark" href="admin.html">Back to Dashboard</a>
+            </div>
+        </header>
+
+        <section class="profile-card">
+            <form id="workerProfileForm" class="profile-form">
+                <div class="image-preview-container">
+                    <img id="profileImagePreview" src="images/IMG_7322-removebg-preview.png" alt="Profile Image Preview" />
+                    <label for="profileImageInput" class="button button-light" style="cursor: pointer; width: auto; margin-top: 10px;">
+                        Change Picture
+                        <input type="file" id="profileImageInput" name="profile_image" accept="image/png, image/jpeg, image/gif, image/webp" style="display: none;" />
+                    </label>
+                </div>
+
+                <label>Email Address
+                    <input type="email" name="WORKER_EMAIL" id="WORKER_EMAIL" required />
+                </label>
+                
+                <label>Full Name
+                    <input type="text" name="WORKER_NAME" id="WORKER_NAME" required />
+                </label>
+
+                <label>Phone Number
+                    <input type="tel" name="WORKER_NOPHONE" id="WORKER_NOPHONE" required />
+                </label>
+                
+                <label>New Password (leave blank to keep current)
+                    <input type="password" name="WORKER_PASSWORD" id="WORKER_PASSWORD" placeholder="Enter new password" />
+                </label>
+
+                <button type="submit" class="button button-dark" style="margin-top: 15px;">Save Changes</button>
+                <div id="statusMessage" class="status-message"></div>
+            </form>
+        </section>
+    </main>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const profileImagePreview = document.getElementById('profileImagePreview');
+        const profileImageInput = document.getElementById('profileImageInput');
+        const statusMessage = document.getElementById('statusMessage');
+
+        // Load existing profile details
+        fetch('api/worker_profile_details.php')
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('WORKER_NAME').value = data.worker.name;
+                    document.getElementById('WORKER_EMAIL').value = data.worker.email;
+                    document.getElementById('WORKER_NOPHONE').value = data.worker.phone;
+                    if (data.worker.profile_image) {
+                        profileImagePreview.src = data.worker.profile_image;
+                    }
+                } else {
+                    statusMessage.textContent = 'Failed to load profile data.';
+                    statusMessage.className = 'status-message error';
+                }
+            })
+            .catch(() => {
+                statusMessage.textContent = 'Error fetching profile data.';
+                statusMessage.className = 'status-message error';
+            });
+
+        // Image preview logic
+        profileImageInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    profileImagePreview.src = e.target.result;
+                }
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+
+        // Form submission
+        document.getElementById('workerProfileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+
+            statusMessage.textContent = 'Saving...';
+            statusMessage.className = 'status-message';
+
+            fetch('api/update_worker_profile.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json().then(data => ({status: res.status, body: data})))
+            .then(res => {
+                if (res.status === 200 && res.body.success) {
+                    statusMessage.textContent = 'Profile updated successfully!';
+                    statusMessage.className = 'status-message success';
+                } else {
+                    statusMessage.textContent = res.body.error || 'Failed to update profile.';
+                    statusMessage.className = 'status-message error';
+                }
+            })
+            .catch(err => {
+                statusMessage.textContent = 'An error occurred while saving.';
+                statusMessage.className = 'status-message error';
+            });
+        });
+    });
+</script>
+</body>
+</html>

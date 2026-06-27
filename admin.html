@@ -46,7 +46,6 @@
                 <div class="profile-upload-container" id="profileImgContainer" style="position: relative; cursor: pointer; width: 50px; height: 50px; border-radius: 50%; overflow: hidden; background: #eee; border: 2px solid #ddd;">
                     <img id="adminProfileImg" src="images/IMG_7322-removebg-preview.png" style="width: 100%; height: 100%; object-fit: cover;" alt="Profile" />
                     <div class="upload-overlay" style="position: absolute; bottom: 0; background: rgba(0,0,0,0.6); color: white; width: 100%; text-align: center; font-size: 10px; padding: 2px 0;">Edit</div>
-                    <input type="file" id="profileUploadInput" accept="image/png, image/jpeg, image/gif, image/webp" style="display: none;" />
                 </div>
                 <div>
                     <p class="eyebrow" id="adminNameLabel">Admin</p>
@@ -107,39 +106,11 @@
             });
     });
 
-    // Handle profile picture upload
+    // Handle profile picture redirect
     const profileImgContainer = document.getElementById('profileImgContainer');
-    const profileUploadInput = document.getElementById('profileUploadInput');
-    const adminProfileImg = document.getElementById('adminProfileImg');
 
     profileImgContainer.addEventListener('click', () => {
-        profileUploadInput.click();
-    });
-
-    profileUploadInput.addEventListener('change', function() {
-        if (this.files && this.files[0]) {
-            const file = this.files[0];
-            const formData = new FormData();
-            formData.append('profile_image', file);
-
-            // Show a loading state locally if desired, here we just upload directly
-            fetch('api/upload-worker-profile.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    // Update image on success
-                    adminProfileImg.src = data.image_url;
-                } else {
-                    alert(data.error || 'Failed to upload image.');
-                }
-            })
-            .catch(err => {
-                alert('An error occurred during upload.');
-            });
-        }
+        window.location.href = 'worker-profile.html';
     });
 </script>
 </body>

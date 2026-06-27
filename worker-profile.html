@@ -6,6 +6,53 @@
     <title>Worker Profile - BGB Bakehouse</title>
     <link rel="stylesheet" href="css/styles.css" />
     <style>
+        /* Embedded Sidebar Styles to match dashboard without breaking profile */
+        .admin-layout { display: flex; min-height: 100vh; }
+        .admin-sidebar {
+            width: 250px;
+            background-color: #1a1a1a;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .sidebar-logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .sidebar-logo img {
+            max-width: 150px;
+        }
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .sidebar-nav a {
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s ease;
+        }
+        .sidebar-nav a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .sidebar-nav a.active {
+            background: #ffb800;
+            color: #000;
+        }
+        @media (max-width: 768px) {
+            .admin-layout { flex-direction: column; }
+            .admin-sidebar { width: 100%; height: auto; padding: 10px; }
+            .sidebar-nav { flex-direction: row; flex-wrap: wrap; justify-content: center; }
+        }
+
         .profile-card {
             background: #fff;
             padding: 30px;
@@ -53,6 +100,30 @@
         }
         .status-message.success { color: #2e7d32; }
         .status-message.error { color: #d32f2f; }
+        .password-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .password-container input {
+            width: 100%;
+            padding-right: 55px;
+        }
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            cursor: pointer;
+            color: #555;
+            margin-top: 5px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            user-select: none;
+        }
+        .password-toggle:hover {
+            color: #000;
+        }
     </style>
     <script>
         fetch('api/check-admin.php')
@@ -75,15 +146,21 @@
 <body class="admin-body" style="display: none;">
 <div class="admin-layout">
     <aside class="admin-sidebar">
-        <img class="admin-logo" src="images/IMG_7322-removebg-preview.png" alt="BGB Bakehouse logo" />
-        <nav>
+        <div class="sidebar-logo">
+            <img src="images/IMG_7322-removebg-preview.png" alt="BGB Bakehouse logo" style="filter: brightness(0) invert(1);" />
+        </div>
+        <nav class="sidebar-nav">
             <a href="admin.html#dashboard">Dashboard</a>
             <a href="admin.html#orders">Orders</a>
             <a href="admin.html#customers">Customers</a>
             <a href="admin.html#products">Products</a>
             <a href="admin.html#reports">Reports</a>
-            <a class="active" href="worker-profile.html">My Profile</a>
+            <a href="worker-profile.html" class="active">My Profile</a>
         </nav>
+        <div style="margin-top: auto; text-align: center; font-size: 12px; color: #999;">
+            <img src="images/IMG_7322-removebg-preview.png" alt="Mascot" style="width:80px; filter: brightness(0) invert(1); opacity: 0.5; margin-bottom:10px;"><br>
+            Batter goes blop!<br>Thanks for baking with love today!
+        </div>
     </aside>
 
     <main class="admin-main">
@@ -116,11 +193,21 @@
                 </label>
 
                 <label>Phone Number
-                    <input type="tel" name="WORKER_NOPHONE" id="WORKER_NOPHONE" required />
+                    <input type="tel" name="WORKER_NOPHONE" id="WORKER_NOPHONE" required oninput="this.value = this.value.replace(/[^0-9]/g, '')" />
                 </label>
                 
                 <label>New Password (leave blank to keep current)
-                    <input type="password" name="WORKER_PASSWORD" id="WORKER_PASSWORD" placeholder="Enter new password" />
+                    <div class="password-container">
+                        <input type="password" name="WORKER_PASSWORD" id="WORKER_PASSWORD" placeholder="Enter new password" />
+                        <span class="password-toggle" onclick="togglePassword('WORKER_PASSWORD', this)">Show</span>
+                    </div>
+                </label>
+
+                <label>Confirm New Password
+                    <div class="password-container">
+                        <input type="password" id="CONFIRM_PASSWORD" placeholder="Confirm new password" />
+                        <span class="password-toggle" onclick="togglePassword('CONFIRM_PASSWORD', this)">Show</span>
+                    </div>
                 </label>
 
                 <button type="submit" class="button button-dark" style="margin-top: 15px;">Save Changes</button>
@@ -131,6 +218,17 @@
 </div>
 
 <script>
+    function togglePassword(inputId, icon) {
+        const input = document.getElementById(inputId);
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.textContent = 'Hide';
+        } else {
+            input.type = 'password';
+            icon.textContent = 'Show';
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
         const profileImagePreview = document.getElementById('profileImagePreview');
         const profileImageInput = document.getElementById('profileImageInput');
@@ -171,6 +269,16 @@
         // Form submission
         document.getElementById('workerProfileForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            
+            const password = document.getElementById('WORKER_PASSWORD').value;
+            const confirmPassword = document.getElementById('CONFIRM_PASSWORD').value;
+            
+            if (password !== confirmPassword) {
+                statusMessage.textContent = 'Passwords do not match.';
+                statusMessage.className = 'status-message error';
+                return;
+            }
+
             const formData = new FormData(this);
 
             statusMessage.textContent = 'Saving...';

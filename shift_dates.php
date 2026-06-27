@@ -1,4 +1,5 @@
 <?php
+/* Author: Dayana Qistina Binti Mat Zake */
 require_once 'database.php';
 // Add 1 year and 25 days to bring dates from 2025-05/06 to 2026-06/07. Actually, just add 1 year (365 days).
 $queries = [

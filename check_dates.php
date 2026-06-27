@@ -1,4 +1,5 @@
 <?php
+/* Author: Dayana Qistina Binti Mat Zake */
 require_once 'database.php';
 $stmt = oci_parse($conn, "SELECT TO_CHAR(ORDER_DATE, 'YYYY-MM-DD') as D, COUNT(*) FROM ORDERS GROUP BY TO_CHAR(ORDER_DATE, 'YYYY-MM-DD') ORDER BY D DESC");
 oci_execute($stmt);

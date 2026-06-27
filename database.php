@@ -1,4 +1,5 @@
 <?php
+/* Author: Dayana Qistina Binti Mat Zake */
 // database.php
 
 // Connect to Oracle using OCI8

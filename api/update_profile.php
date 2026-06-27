@@ -1,4 +1,5 @@
 <?php
+/* Author: Dayana Qistina Binti Mat Zake */
 // api/update_profile.php
 session_start();
 require_once '../database.php';

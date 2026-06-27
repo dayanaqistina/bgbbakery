@@ -28,119 +28,119 @@
     </script>
 </head>
 <body class="admin-body" style="display: none;">
-    <div class="admin-layout">
-        <aside class="admin-sidebar">
-            <img class="admin-logo" src="images/IMG_7322-removebg-preview.png" alt="BGB Bakehouse logo" />
-            <nav>
-                <a class="active" href="#dashboard">Dashboard</a>
-                <a href="#orders">Orders</a>
-                <a href="#customers">Customers</a>
-                <a href="#products">Products</a>
-                <a href="#reports">Reports</a>
-            </nav>
-        </aside>
+<div class="admin-layout">
+    <aside class="admin-sidebar">
+        <img class="admin-logo" src="images/IMG_7322-removebg-preview.png" alt="BGB Bakehouse logo" />
+        <nav>
+            <a class="active" href="#dashboard">Dashboard</a>
+            <a href="#orders">Orders</a>
+            <a href="#customers">Customers</a>
+            <a href="#products">Products</a>
+            <a href="#reports">Reports</a>
+        </nav>
+    </aside>
 
-        <main class="admin-main" id="dashboard">
-            <header class="admin-topbar">
-                <div style="display: flex; align-items: center; gap: 15px;">
-                    <div class="profile-upload-container" id="profileImgContainer" style="position: relative; cursor: pointer; width: 50px; height: 50px; border-radius: 50%; overflow: hidden; background: #eee; border: 2px solid #ddd;">
-                        <img id="adminProfileImg" src="images/IMG_7322-removebg-preview.png" style="width: 100%; height: 100%; object-fit: cover;" alt="Profile" />
-                        <div class="upload-overlay" style="position: absolute; bottom: 0; background: rgba(0,0,0,0.6); color: white; width: 100%; text-align: center; font-size: 10px; padding: 2px 0;">Edit</div>
-                        <input type="file" id="profileUploadInput" accept="image/png, image/jpeg, image/gif, image/webp" style="display: none;" />
-                    </div>
-                    <div>
-                        <p class="eyebrow" id="adminNameLabel">Admin</p>
-                        <h1>Dashboard</h1>
-                    </div>
+    <main class="admin-main" id="dashboard">
+        <header class="admin-topbar">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div class="profile-upload-container" id="profileImgContainer" style="position: relative; cursor: pointer; width: 50px; height: 50px; border-radius: 50%; overflow: hidden; background: #eee; border: 2px solid #ddd;">
+                    <img id="adminProfileImg" src="images/IMG_7322-removebg-preview.png" style="width: 100%; height: 100%; object-fit: cover;" alt="Profile" />
+                    <div class="upload-overlay" style="position: absolute; bottom: 0; background: rgba(0,0,0,0.6); color: white; width: 100%; text-align: center; font-size: 10px; padding: 2px 0;">Edit</div>
+                    <input type="file" id="profileUploadInput" accept="image/png, image/jpeg, image/gif, image/webp" style="display: none;" />
                 </div>
-                <div style="display: flex; gap: 10px;">
-                    <a class="button button-dark" href="index.html">View site</a>
-                    <button class="button button-light" id="adminLogoutBtn">Logout</button>
+                <div>
+                    <p class="eyebrow" id="adminNameLabel">Admin</p>
+                    <h1>Dashboard</h1>
                 </div>
-            </header>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <a class="button button-dark" href="index.html">View site</a>
+                <button class="button button-light" id="adminLogoutBtn">Logout</button>
+            </div>
+        </header>
 
-            <section class="admin-metrics">
-                <article><span>Total orders</span><strong>8</strong></article>
-                <article><span>Pending orders</span><strong>5</strong></article>
-                <article><span>Completed orders</span><strong>3</strong></article>
-                <article><span>Today's revenue</span><strong>RM620</strong></article>
-            </section>
+        <section class="admin-metrics">
+            <article><span>Total orders</span><strong>8</strong></article>
+            <article><span>Pending orders</span><strong>5</strong></article>
+            <article><span>Completed orders</span><strong>3</strong></article>
+            <article><span>Today's revenue</span><strong>RM620</strong></article>
+        </section>
 
-            <section class="admin-panels">
-                <article class="admin-panel" id="orders">
-                    <div class="panel-heading">
-                        <h2>Recent orders</h2>
-                        <button class="button button-light" type="button">New order</button>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr><th>Order ID</th><th>Customer</th><th>Type</th><th>Total</th><th>Status</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>ORD00045</td><td>Aina</td><td>Delivery</td><td>RM97.00</td><td><span class="status pending">Pending</span></td></tr>
-                            <tr><td>ORD00044</td><td>Sara</td><td>Pickup</td><td>RM85.00</td><td><span class="status ready">Ready</span></td></tr>
-                            <tr><td>ORD00043</td><td>Amirul</td><td>Delivery</td><td>RM120.00</td><td><span class="status baking">Baking</span></td></tr>
-                        </tbody>
-                    </table>
-                </article>
+        <section class="admin-panels">
+            <article class="admin-panel" id="orders">
+                <div class="panel-heading">
+                    <h2>Recent orders</h2>
+                    <button class="button button-light" type="button">New order</button>
+                </div>
+                <table>
+                    <thead>
+                    <tr><th>Order ID</th><th>Customer</th><th>Type</th><th>Total</th><th>Status</th></tr>
+                    </thead>
+                    <tbody>
+                    <tr><td>ORD00045</td><td>Aina</td><td>Delivery</td><td>RM97.00</td><td><span class="status pending">Pending</span></td></tr>
+                    <tr><td>ORD00044</td><td>Sara</td><td>Pickup</td><td>RM85.00</td><td><span class="status ready">Ready</span></td></tr>
+                    <tr><td>ORD00043</td><td>Amirul</td><td>Delivery</td><td>RM120.00</td><td><span class="status baking">Baking</span></td></tr>
+                    </tbody>
+                </table>
+            </article>
 
-                <article class="admin-panel" id="reports">
-                    <h2>Sales snapshot</h2>
-                    <div class="report-bars" aria-label="Revenue chart">
-                        <span style="height: 38%"></span>
-                        <span style="height: 52%"></span>
-                        <span style="height: 66%"></span>
-                        <span style="height: 78%"></span>
-                        <span style="height: 92%"></span>
-                    </div>
-                    <p>Monthly revenue: <strong>RM5,680</strong></p>
-                </article>
-            </section>
-        </main>
-    </div>
+            <article class="admin-panel" id="reports">
+                <h2>Sales snapshot</h2>
+                <div class="report-bars" aria-label="Revenue chart">
+                    <span style="height: 38%"></span>
+                    <span style="height: 52%"></span>
+                    <span style="height: 66%"></span>
+                    <span style="height: 78%"></span>
+                    <span style="height: 92%"></span>
+                </div>
+                <p>Monthly revenue: <strong>RM5,680</strong></p>
+            </article>
+        </section>
+    </main>
+</div>
 
-    <script>
-        document.getElementById('adminLogoutBtn').addEventListener('click', function() {
-            fetch('api/admin-logout.php')
-                .then(() => {
-                    window.location.href = 'admin-login.html';
-                });
-        });
+<script>
+    document.getElementById('adminLogoutBtn').addEventListener('click', function() {
+        fetch('api/admin-logout.php')
+            .then(() => {
+                window.location.href = 'admin-login.html';
+            });
+    });
 
-        // Handle profile picture upload
-        const profileImgContainer = document.getElementById('profileImgContainer');
-        const profileUploadInput = document.getElementById('profileUploadInput');
-        const adminProfileImg = document.getElementById('adminProfileImg');
+    // Handle profile picture upload
+    const profileImgContainer = document.getElementById('profileImgContainer');
+    const profileUploadInput = document.getElementById('profileUploadInput');
+    const adminProfileImg = document.getElementById('adminProfileImg');
 
-        profileImgContainer.addEventListener('click', () => {
-            profileUploadInput.click();
-        });
+    profileImgContainer.addEventListener('click', () => {
+        profileUploadInput.click();
+    });
 
-        profileUploadInput.addEventListener('change', function() {
-            if (this.files && this.files[0]) {
-                const file = this.files[0];
-                const formData = new FormData();
-                formData.append('profile_image', file);
+    profileUploadInput.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+            const file = this.files[0];
+            const formData = new FormData();
+            formData.append('profile_image', file);
 
-                // Show a loading state locally if desired, here we just upload directly
-                fetch('api/upload-worker-profile.php', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        // Update image on success
-                        adminProfileImg.src = data.image_url;
-                    } else {
-                        alert(data.error || 'Failed to upload image.');
-                    }
-                })
-                .catch(err => {
-                    alert('An error occurred during upload.');
-                });
-            }
-        });
-    </script>
+            // Show a loading state locally if desired, here we just upload directly
+            fetch('api/upload-worker-profile.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    // Update image on success
+                    adminProfileImg.src = data.image_url;
+                } else {
+                    alert(data.error || 'Failed to upload image.');
+                }
+            })
+            .catch(err => {
+                alert('An error occurred during upload.');
+            });
+        }
+    });
+</script>
 </body>
 </html>

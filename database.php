@@ -5,7 +5,7 @@
 // The Service Name is FREEPDB1 based on the provided connection details
 $dsn = "localhost:1521/FREEPDB1";
 $username = "test";
-$password = "system";
+$password = "test";
 
 // Set Oracle Instant Client paths for macOS
 // Using project-local copy so Apache's daemon user can access it

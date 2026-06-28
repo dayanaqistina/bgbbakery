@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Customers - BGB Bakehouse Admin</title>
+    <link rel="stylesheet" href="css/styles.css" />
+
+    <script>
+        fetch('api/check-admin.php')
+            .then(res => res.json())
+            .then(data => {
+                if (!data.is_admin) {
+                    window.location.href = 'admin-login.html';
+                } else {
+                    document.body.style.display = 'block';
+                }
+            })
+            .catch(() => {
+                window.location.href = 'admin-login.html';
+            });
+    </script>
+</head>
+
+<body class="admin-body" style="display:none;">
+<div class="admin-layout">
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+        <img class="admin-logo" src="images/IMG_7322-removebg-preview.png" />
+
+        <nav>
+            <a href="admin.html">Dashboard</a>
+            <a href="admin.html#orders">Orders</a>
+            <a class="active" href="customers.html">Customers</a>
+            <a href="admin.html#products">Products</a>
+            <a href="admin.html#reports">Reports</a>
+        </nav>
+    </aside>
+
+    <!-- Main -->
+    <main class="admin-main">
+
+        <header class="admin-topbar">
+            <div>
+                <p class="eyebrow">Admin</p>
+                <h1>Customers</h1>
+            </div>
+
+            <div style="display:flex; gap:10px;">
+                <a class="button button-dark" href="index.html">View site</a>
+                <button class="button button-light" id="logoutBtn">Logout</button>
+            </div>
+        </header>
+
+        <section class="admin-panels">
+
+            <!-- ================= ADD CUSTOMER FORM ================= -->
+            <article class="admin-panel">
+                <div class="panel-heading">
+                    <h2>Add Customer</h2>
+                </div>
+
+                <div style="display:grid; gap:10px; max-width:500px;">
+                    <input id="id" placeholder="Customer ID (e.g. C001)">
+                    <input id="name" placeholder="Name">
+                    <input id="phone" placeholder="Phone">
+                    <input id="email" placeholder="Email">
+                    <input id="password" placeholder="Password">
+                    <input id="address1" placeholder="Address 1">
+                    <input id="address2" placeholder="Address 2">
+                    <input id="postcode" placeholder="Postcode">
+                    <input id="state" placeholder="State">
+
+                    <button class="button button-dark" onclick="addCustomer()">
+                        Add Customer
+                    </button>
+                </div>
+            </article>
+
+            <!-- ================= CUSTOMER TABLE ================= -->
+            <article class="admin-panel">
+                <div class="panel-heading">
+                    <h2>Customer List</h2>
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="customerTableBody">
+                        <tr><td colspan="5">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </article>
+
+        </section>
+    </main>
+</div>
+
+<script>
+const API = "api/customers.php";
+
+// ================= LOAD CUSTOMERS =================
+function loadCustomers() {
+    fetch(API + "?action=get")
+        .then(res => res.json())
+        .then(data => {
+            const tbody = document.getElementById("customerTableBody");
+            tbody.innerHTML = "";
+
+            if (!data.length) {
+                tbody.innerHTML = `<tr><td colspan="5">No customers found</td></tr>`;
+                return;
+            }
+
+            data.forEach(c => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${c.id}</td>
+                        <td>${c.name}</td>
+                        <td>${c.phoneNumber}</td>
+                        <td>${c.email}</td>
+                        <td>
+                            <button onclick="deleteCustomer('${c.id}')">
+                                Delete
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        })
+        .catch(() => {
+            document.getElementById("customerTableBody").innerHTML =
+                `<tr><td colspan="5">Failed to load</td></tr>`;
+        });
+}
+
+// ================= ADD CUSTOMER =================
+function addCustomer() {
+    const data = {
+        id: document.getElementById("id").value,
+        name: document.getElementById("name").value,
+        phone: document.getElementById("phone").value,
+        email: document.getElementById("email").value,
+        password: document.getElementById("password").value,
+        address1: document.getElementById("address1").value,
+        address2: document.getElementById("address2").value,
+        postcode: document.getElementById("postcode").value,
+        state: document.getElementById("state").value
+    };
+
+    fetch(API + "?action=add", {
+        method: "POST",
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(() => {
+        alert("Customer added!");
+        loadCustomers();
+    });
+}
+
+// ================= DELETE CUSTOMER =================
+function deleteCustomer(id) {
+    if (!confirm("Delete this customer?")) return;
+
+    fetch(API + "?action=delete", {
+        method: "POST",
+        body: JSON.stringify({ id })
+    })
+    .then(res => res.json())
+    .then(() => {
+        alert("Deleted!");
+        loadCustomers();
+    });
+}
+
+// ================= LOGOUT =================
+document.getElementById("logoutBtn").addEventListener("click", () => {
+    fetch("api/admin-logout.php")
+        .then(() => window.location.href = "admin-login.html");
+});
+
+// INIT
+loadCustomers();
+</script>
+
+</body>
+</html>

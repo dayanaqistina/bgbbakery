@@ -1,3 +1,4 @@
+/* Author: Dayana Qistina Binti Mat Zake */
 const cart = JSON.parse(localStorage.getItem('bgbCart') || '[]');
 
 const productImages = [

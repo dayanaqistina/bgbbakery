@@ -1,4 +1,5 @@
 <?php
+/* Author: Dayana Qistina Binti Mat Zake */
 // api/check_auth.php
 session_start();
 

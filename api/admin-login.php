@@ -1,4 +1,5 @@
 <?php
+/* Author: Dayana Qistina Binti Mat Zake */
 // api/admin-login.php
 session_start();
 require_once '../database.php';
@@ -33,6 +34,7 @@ try {
         $_SESSION['worker_id'] = $user['WORKER_ID'];
         $_SESSION['worker_email'] = $user['WORKER_EMAIL'];
         $_SESSION['worker_name'] = $user['WORKER_NAME'];
+        $_SESSION['worker_profile_image'] = $user['PROFILE_IMAGE'] ?? null;
         if (isset($user['OWNER_ID'])) {
             $_SESSION['owner_id'] = $user['OWNER_ID'];
         }

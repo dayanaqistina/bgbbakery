@@ -1,6 +1,7 @@
 <!-- Author: Dayana Qistina Binti Mat Zake -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,19 +14,22 @@
             padding: 30px;
             background: #fff;
             border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
         }
+
         .auth-form {
             display: flex;
             flex-direction: column;
             gap: 16px;
         }
+
         .auth-form label {
             display: flex;
             flex-direction: column;
             font-weight: bold;
             font-size: 14px;
         }
+
         .auth-form input {
             padding: 12px;
             border: 1px solid #ddd;
@@ -33,11 +37,13 @@
             margin-top: 6px;
             font-family: inherit;
         }
+
         .auth-message {
             color: #d32f2f;
             font-size: 14px;
             text-align: center;
         }
+
         .admin-badge {
             display: inline-block;
             background: #222;
@@ -52,6 +58,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="page-shell">
         <header class="subpage-header">
@@ -82,14 +89,18 @@
                     </label>
                     <label>Password
                         <div style="position: relative; display: flex; align-items: center;">
-                            <input type="password" id="loginPassword" name="WORKER_PASSWORD" required placeholder="Enter password" style="width: 100%; box-sizing: border-box; padding-right: 40px;" />
-                            <button type="button" id="toggleLoginPassword" style="position: absolute; right: 10px; background: none; border: none; cursor: pointer; font-size: 18px; padding: 0;">
-                                👁️
+                            <input type="password" id="loginPassword" name="WORKER_PASSWORD" required
+                                placeholder="Enter password"
+                                style="width: 100%; box-sizing: border-box; padding-right: 40px;" />
+                            <button type="button" id="toggleLoginPassword"
+                                style="position: absolute; right: 10px; background: none; border: none; cursor: pointer; font-size: 12px; font-weight: bold; color: #555; padding: 0;">
+                                SHOW
                             </button>
                         </div>
                     </label>
-                    
-                    <button class="button button-dark" type="submit" style="width: 100%; margin-top: 10px;">Login to Dashboard</button>
+
+                    <button class="button button-dark" type="submit" style="width: 100%; margin-top: 10px;">Login to
+                        Dashboard</button>
                     <p class="auth-message" id="loginMessage"></p>
                 </form>
             </div>
@@ -100,33 +111,34 @@
         // Toggle Password Visibility
         const togglePassword = document.getElementById('toggleLoginPassword');
         const passwordInput = document.getElementById('loginPassword');
-        
+
         togglePassword.addEventListener('click', function (e) {
             const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
             passwordInput.setAttribute('type', type);
-            this.textContent = type === 'password' ? '👁️' : '🙈';
+            this.textContent = type === 'password' ? 'HIDE' : 'SHOW';
         });
 
-        document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+        document.getElementById('adminLoginForm').addEventListener('submit', function (e) {
             e.preventDefault();
             const formData = new FormData(this);
-            
+
             fetch('api/admin-login.php', {
                 method: 'POST',
                 body: formData
             })
-            .then(res => res.json().then(data => ({status: res.status, body: data})))
-            .then(res => {
-                if (res.status === 200) {
-                    window.location.href = 'admin.html';
-                } else {
-                    document.getElementById('loginMessage').textContent = res.body.error || 'Login failed';
-                }
-            })
-            .catch(err => {
-                document.getElementById('loginMessage').textContent = 'An error occurred. Please try again.';
-            });
+                .then(res => res.json().then(data => ({ status: res.status, body: data })))
+                .then(res => {
+                    if (res.status === 200) {
+                        window.location.href = 'admin.html';
+                    } else {
+                        document.getElementById('loginMessage').textContent = res.body.error || 'Login failed';
+                    }
+                })
+                .catch(err => {
+                    document.getElementById('loginMessage').textContent = 'An error occurred. Please try again.';
+                });
         });
     </script>
 </body>
+
 </html>

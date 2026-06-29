@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reports - BGB Bakehouse</title>
+    <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="admin-body">
+    <div class="admin-layout">
+        <aside class="admin-sidebar">
+            <img class="admin-logo" src="images/IMG_7322-removebg-preview.png" alt="BGB Bakehouse logo" />
+            <nav>
+                <a href="admin.html">Dashboard</a>
+                <a href="admin.html#orders">Orders</a>
+                <a href="admin.html#customers">Customers</a>
+                <a href="products.html">Products</a>
+                <a class="active" href="reports.html">Reports</a>
+            </nav>
+        </aside>
+
+        <main class="admin-main">
+            <header class="admin-topbar">
+                <div>
+                    <p class="eyebrow">Admin</p>
+                    <h1>Sales Report</h1>
+                </div>
+            </header>
+
+            <section class="admin-metrics">
+                <article>
+                    <span>Total Orders</span>
+                    <strong id="totalOrders">0</strong>
+                </article>
+                <article>
+                    <span>Total Sales</span>
+                    <strong id="totalSales">RM0.00</strong>
+                </article>
+                <article>
+                    <span>Best Seller</span>
+                    <strong id="bestSeller">-</strong>
+                </article>
+                <article>
+                    <span>Best Seller Quantity</span>
+                    <strong id="bestSellerQty">0</strong>
+                </article>
+            </section>
+
+            <section class="admin-panels">
+                <article class="admin-panel">
+                    <div class="panel-heading">
+                        <h2>Sales Details</h2>
+
+                        <div>
+                            <label for="reportType"><strong>Period:</strong></label>
+                            <select id="reportType">
+                                <option value="daily">Daily</option>
+                                <option value="monthly" selected>Monthly</option>
+                                <option value="yearly">Yearly</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Period</th>
+                                <th>Total Orders</th>
+                                <th>Total Sales</th>
+                            </tr>
+                        </thead>
+                        <tbody id="salesTableBody">
+                            <tr>
+                                <td colspan="3">Loading report...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </article>
+
+                <article class="admin-panel">
+                    <h2>Best Selling Items</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Sold</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bestSellingBody">
+                            <tr>
+                                <td colspan="2">Loading items...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </article>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        function loadReport() {
+            const type = document.getElementById('reportType').value;
+
+            fetch(`./api/reports.php?type=${type}`)
+                .then(res => res.json())
+                .then(data => {
+                    const salesBody = document.getElementById('salesTableBody');
+                    const bestBody = document.getElementById('bestSellingBody');
+
+                    salesBody.innerHTML = '';
+                    bestBody.innerHTML = '';
+
+                    let totalOrders = 0;
+                    let totalSales = 0;
+
+                    if (!data.sales || data.sales.length === 0) {
+                        salesBody.innerHTML = '<tr><td colspan="3">No sales data available.</td></tr>';
+                    } else {
+                        data.sales.forEach(row => {
+                            totalOrders += Number(row.totalOrders);
+                            totalSales += Number(row.totalSales);
+
+                            salesBody.innerHTML += `
+                                <tr>
+                                    <td>${row.period}</td>
+                                    <td>${row.totalOrders}</td>
+                                    <td>RM${Number(row.totalSales).toFixed(2)}</td>
+                                </tr>
+                            `;
+                        });
+                    }
+
+                    document.getElementById('totalOrders').textContent = totalOrders;
+                    document.getElementById('totalSales').textContent = 'RM' + totalSales.toFixed(2);
+
+                    if (data.bestSelling && data.bestSelling.length > 0) {
+                        document.getElementById('bestSeller').textContent = data.bestSelling[0].productName;
+                        document.getElementById('bestSellerQty').textContent = data.bestSelling[0].totalSold;
+
+                        data.bestSelling.forEach(item => {
+                            bestBody.innerHTML += `
+                                <tr>
+                                    <td>${item.productName}</td>
+                                    <td>${item.totalSold}</td>
+                                </tr>
+                            `;
+                        });
+                    } else {
+                        bestBody.innerHTML = '<tr><td colspan="2">No best selling data.</td></tr>';
+                    }
+                })
+                .catch(() => {
+                    document.getElementById('salesTableBody').innerHTML =
+                        '<tr><td colspan="3">Failed to load report.</td></tr>';
+                });
+        }
+
+        document.getElementById('reportType').addEventListener('change', loadReport);
+        loadReport();
+    </script>
+</body>
+</html>

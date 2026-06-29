@@ -6,6 +6,89 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - BGB Bakehouse</title>
     <link rel="stylesheet" href="css/admin.css">
+    <style>
+        .filter-container {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        .admin-profile { gap: 12px !important; }
+        .admin-profile img {
+            width: 56px !important;
+            height: 56px !important;
+            border: 3px solid white !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+        }
+        .admin-profile-info strong {
+            font-size: 18px !important;
+            font-weight: 800 !important;
+            letter-spacing: -0.3px !important;
+        }
+        .admin-profile-info span {
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            color: #777 !important;
+        }
+        .dashboard-header-title {
+            font-size: 34px !important;
+            font-weight: 900 !important;
+            letter-spacing: -1px !important;
+            color: #19150f;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .greeting-text {
+            font-size: 15px !important;
+            font-weight: 500 !important;
+            color: #666 !important;
+            margin-top: 4px !important;
+        }
+        .user-name-highlight {
+            color: #d49000;
+            font-weight: 700;
+        }
+        .filter-select {
+            appearance: none;
+            -webkit-appearance: none;
+            background: #fff url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%24%2024%22%20fill%3D%22none%22%20stroke%3D%22%23333%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%209%2012%2015%2018%209%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E") no-repeat right 16px center;
+            border: 2px solid #eaeaea;
+            border-radius: 12px;
+            padding: 12px 44px 12px 20px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #19150f;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            font-family: inherit;
+        }
+        .filter-select:hover, .filter-select:focus {
+            border-color: #f7c900;
+            outline: none;
+            box-shadow: 0 4px 12px rgba(247, 201, 0, 0.15);
+        }
+        .filter-clear-btn {
+            background: #19150f;
+            color: #fff;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .filter-clear-btn:hover {
+            background: #f7c900;
+            color: #19150f;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(247, 201, 0, 0.25);
+        }
+    </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         // Check admin authentication before showing the page
@@ -18,7 +101,11 @@
                     document.body.style.display = 'flex';
                     if (data.worker_name) {
                         document.getElementById('adminNameLabel').textContent = data.worker_name;
-                        document.getElementById('greetingName').textContent = 'Good morning, ' + data.worker_name + '! ♥️';
+                        const hour = new Date().getHours();
+                        let timeGreeting = 'Good morning';
+                        if (hour >= 12 && hour < 18) timeGreeting = 'Good afternoon';
+                        else if (hour >= 18) timeGreeting = 'Good evening';
+                        document.getElementById('greetingName').innerHTML = timeGreeting + ', <span class="user-name-highlight">' + data.worker_name + '</span>! 👋';
                     }
                     if (data.worker_profile_image) {
                         document.getElementById('adminProfileImg').src = data.worker_profile_image;
@@ -33,24 +120,8 @@
 </head>
 <body style="display: none;">
 
-<!-- Sidebar -->
-<aside class="admin-sidebar">
-    <div class="sidebar-logo">
-        <img src="images\bgb ori icon.png" alt="BGB Bakehouse logo"  />
-    </div>
-    <nav class="sidebar-nav">
-        <a href="admin.html#dashboard" class="active">Dashboard</a>
-        <a href="admin-orders.html">Orders</a>
-        <a href="customers.html">Customers</a>
-        <a href="admin.html#products">Products</a>
-        <a href="admin.html#reports">Reports</a>
-        <a href="worker-profile.html">My Profile</a>
-    </nav>
-    <div style="margin-top: auto; text-align: center; font-size: 12px; color: #999;">
-        <img src="images/IMG_7322-removebg-preview.png" alt="Mascot" style="width:80px; filter: brightness(0) invert(1); opacity: 0.5; margin-bottom:10px;"><br>
-        Batter goes blop!<br>Thanks for baking with love today!
-    </div>
-</aside>
+    <!-- Sidebar -->
+    <div id="sidebar-container" style="width: 250px; flex-shrink: 0; background-color: #19150f; display: flex; flex-direction: column;"></div>
 
 <!-- Main Content -->
 <main class="admin-main">
@@ -58,19 +129,19 @@
     <!-- Topbar -->
     <header class="admin-topbar">
         <div class="topbar-left">
-            <h1>✨ Dashboard ✨</h1>
-            <p id="greetingName">Good morning!</p>
+            <h1 class="dashboard-header-title">Dashboard</h1>
+            <p id="greetingName" class="greeting-text">Welcome back!</p>
         </div>
         <div class="topbar-right">
-            <div class="date-selector" style="padding: 0; background: transparent; border: none; box-shadow: none; display: flex; gap: 5px;">
-                <select id="globalFilterType" class="button button-outline" style="background: white; border-radius: 8px; border: 1px solid #ddd; padding: 0 10px;">
+            <div class="filter-container">
+                <select id="globalFilterType" class="filter-select">
                     <option value="all">Overall</option>
                     <option value="daily">Daily</option>
                     <option value="monthly">Monthly</option>
                 </select>
-                <input type="date" id="globalDateFilter" class="custom-date-picker" style="background: white; display: none;" />
-                <select id="globalMonthFilter" class="custom-date-picker" style="background: white; display: none;"></select>
-                <button id="clearDateBtn" class="button button-dark" style="padding: 10px 15px; border-radius: 8px;">Clear</button>
+                <input type="date" id="globalDateFilter" class="filter-select" style="display: none;" />
+                <select id="globalMonthFilter" class="filter-select" style="display: none;"></select>
+                <button id="clearDateBtn" class="filter-clear-btn">Clear</button>
             </div>
             <a href="worker-profile.html" class="admin-profile">
                 <img id="adminProfileImg" src="images/IMG_7322-removebg-preview.png" alt="Profile" />
@@ -410,5 +481,50 @@
         });
     }
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const sidebarContainer = document.getElementById('sidebar-container');
+        if (sidebarContainer) {
+            fetch('admin-sidebar.html')
+                .then(res => res.text())
+                .then(html => {
+                    sidebarContainer.innerHTML = html;
+                    
+                    // Set active class
+                    const currentPath = window.location.pathname.split('/').pop() || 'admin.html';
+                    const hash = window.location.hash.substring(1);
+                    
+                    const navLinks = document.querySelectorAll('.sidebar-nav a');
+                    navLinks.forEach(link => {
+                        const page = link.getAttribute('data-page');
+                        if (hash && page === hash) {
+                            link.classList.add('active');
+                        } else if (!hash && page === currentPath) {
+                            link.classList.add('active');
+                        } else {
+                            link.classList.remove('active');
+                        }
+                    });
+
+                    // Logout logic
+                    const logoutBtn = document.getElementById('adminLogoutBtn');
+                    if (logoutBtn) {
+                        logoutBtn.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            fetch('api/admin-logout.php')
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        window.location.href = 'admin-login.html';
+                                    }
+                                });
+                        });
+                    }
+                });
+        }
+    });
+</script>
+
 </body>
 </html>

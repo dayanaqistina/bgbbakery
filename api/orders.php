@@ -29,8 +29,15 @@ try {
     }
 
     if ($searchTerm) {
-        $whereClauses[] = "(TO_CHAR(o.ORDER_ID) LIKE :search OR c.CUST_ID LIKE :search OR LOWER(c.CUST_NAME) LIKE LOWER(:search))";
-        $params[':search'] = '%' . $searchTerm . '%';
+        $cleanNum = preg_replace('/[^0-9]/', '', $searchTerm);
+        if (!empty($cleanNum)) {
+            $whereClauses[] = "(UPPER('ORD' || LPAD(TO_CHAR(o.ORDER_ID), 4, '0')) LIKE UPPER(:search) OR TO_CHAR(o.ORDER_ID) LIKE :raw_search OR UPPER(c.CUST_ID) LIKE UPPER(:search) OR LOWER(c.CUST_NAME) LIKE LOWER(:search))";
+            $params[':search'] = '%' . trim($searchTerm) . '%';
+            $params[':raw_search'] = '%' . $cleanNum . '%';
+        } else {
+            $whereClauses[] = "(UPPER('ORD' || LPAD(TO_CHAR(o.ORDER_ID), 4, '0')) LIKE UPPER(:search) OR UPPER(c.CUST_ID) LIKE UPPER(:search) OR LOWER(c.CUST_NAME) LIKE LOWER(:search))";
+            $params[':search'] = '%' . trim($searchTerm) . '%';
+        }
     }
 
     $whereSql = count($whereClauses) > 0 ? "WHERE " . implode(" AND ", $whereClauses) : "";
@@ -77,7 +84,7 @@ try {
             'type' => $row['ORDER_TYPE'],
             'items' => $row['ITEMS'],
             'status' => $row['ORDER_STATUS'],
-            'total' => $row['TOTAL_AMOUNT'],
+            'total' => isset($row['TOTAL_AMOUNT']) ? (float)$row['TOTAL_AMOUNT'] : 0,
             'time' => $row['ORDER_TIME']
         ];
     }

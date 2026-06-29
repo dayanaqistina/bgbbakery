@@ -33,6 +33,11 @@ body {
 }
 
 /* Sidebar */
+#sidebar-container {
+    background-color: var(--bg-dark);
+    display: flex;
+    flex-direction: column;
+}
 .admin-sidebar {
     width: 250px;
     background-color: var(--bg-dark);
@@ -41,6 +46,8 @@ body {
     flex-direction: column;
     padding: 20px;
     box-sizing: border-box;
+    flex-grow: 1;
+    min-height: 100vh;
 }
 .sidebar-logo {
     text-align: center;

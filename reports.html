@@ -1,0 +1,271 @@
+<!-- Author: Dayana Qistina Binti Mat Zake -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reports - BGB Bakehouse</title>
+    <link rel="stylesheet" href="css/admin.css" />
+    <style>
+        .admin-profile { gap: 12px !important; }
+        .admin-profile img {
+            width: 56px !important;
+            height: 56px !important;
+            border: 3px solid white !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+        }
+        .admin-profile-info strong {
+            font-size: 18px !important;
+            font-weight: 800 !important;
+            letter-spacing: -0.3px !important;
+        }
+        .admin-profile-info span {
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            color: #777 !important;
+        }
+        .dashboard-header-title {
+            font-size: 34px !important;
+            font-weight: 900 !important;
+            letter-spacing: -1px !important;
+            color: #19150f;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .greeting-text {
+            font-size: 15px !important;
+            font-weight: 500 !important;
+            color: #666 !important;
+            margin-top: 4px !important;
+        }
+        .user-name-highlight {
+            color: #d49000;
+            font-weight: 700;
+        }
+    </style>
+    <script>
+        // Check admin authentication before showing the page
+        fetch('api/check-admin.php')
+            .then(res => res.json())
+            .then(data => {
+                if (!data.is_admin) {
+                    window.location.href = 'admin-login.html';
+                } else {
+                    document.body.style.display = 'flex';
+                    if (data.worker_name) {
+                        document.getElementById('adminNameLabel').textContent = data.worker_name;
+                        const hour = new Date().getHours();
+                        let timeGreeting = 'Good morning';
+                        if (hour >= 12 && hour < 18) timeGreeting = 'Good afternoon';
+                        else if (hour >= 18) timeGreeting = 'Good evening';
+                        document.getElementById('greetingName').innerHTML = timeGreeting + ', <span class="user-name-highlight">' + data.worker_name + '</span>! 👋';
+                    }
+                    if (data.worker_profile_image) {
+                        document.getElementById('adminProfileImg').src = data.worker_profile_image;
+                    }
+                }
+            })
+            .catch(() => {
+                window.location.href = 'admin-login.html';
+            });
+    </script>
+</head>
+<body style="display: none;">
+    <!-- Sidebar -->
+    <div id="sidebar-container" style="width: 250px; flex-shrink: 0; background-color: #19150f; display: flex; flex-direction: column;"></div>
+
+    <main class="admin-main">
+        <header class="admin-topbar">
+            <div class="topbar-left">
+                <h1 class="dashboard-header-title">Reports</h1>
+                <p id="greetingName" class="greeting-text">Welcome back!</p>
+            </div>
+            <div class="topbar-right">
+                <a href="worker-profile.html" class="admin-profile">
+                    <img id="adminProfileImg" src="images/IMG_7322-removebg-preview.png" alt="Profile" />
+                    <div class="admin-profile-info">
+                        <strong id="adminNameLabel">Admin</strong>
+                        <span>Worker</span>
+                    </div>
+                </a>
+            </div>
+        </header>
+
+        <section class="admin-metrics" style="margin-top: 25px;">
+            <article>
+                <span>Total Orders</span>
+                <strong id="totalOrders">0</strong>
+            </article>
+            <article>
+                <span>Total Sales</span>
+                <strong id="totalSales">RM0.00</strong>
+            </article>
+            <article>
+                <span>Best Seller</span>
+                <strong id="bestSeller">-</strong>
+            </article>
+            <article>
+                <span>Best Seller Quantity</span>
+                <strong id="bestSellerQty">0</strong>
+            </article>
+        </section>
+
+        <section class="admin-panels">
+            <article class="admin-panel">
+                <div class="panel-heading">
+                    <h2>Sales Details</h2>
+
+                    <div>
+                        <label for="reportType"><strong>Period:</strong></label>
+                        <select id="reportType">
+                            <option value="daily">Daily</option>
+                            <option value="monthly" selected>Monthly</option>
+                            <option value="yearly">Yearly</option>
+                        </select>
+                    </div>
+                </div>
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Period</th>
+                        <th>Total Orders</th>
+                        <th>Total Sales</th>
+                    </tr>
+                    </thead>
+                    <tbody id="salesTableBody">
+                    <tr>
+                        <td colspan="3">Loading report...</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </article>
+
+            <article class="admin-panel">
+                <h2>Best Selling Items</h2>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Sold</th>
+                    </tr>
+                    </thead>
+                    <tbody id="bestSellingBody">
+                    <tr>
+                        <td colspan="2">Loading items...</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </article>
+        </section>
+    </main>
+
+<script>
+    function loadReport() {
+        const type = document.getElementById('reportType').value;
+
+        fetch(`./api/reports.php?type=${type}`)
+            .then(res => res.json())
+            .then(data => {
+                const salesBody = document.getElementById('salesTableBody');
+                const bestBody = document.getElementById('bestSellingBody');
+
+                salesBody.innerHTML = '';
+                bestBody.innerHTML = '';
+
+                let totalOrders = 0;
+                let totalSales = 0;
+
+                if (!data.sales || data.sales.length === 0) {
+                    salesBody.innerHTML = '<tr><td colspan="3">No sales data available.</td></tr>';
+                } else {
+                    data.sales.forEach(row => {
+                        totalOrders += Number(row.totalOrders);
+                        totalSales += Number(row.totalSales);
+
+                        salesBody.innerHTML += `
+                            <tr>
+                                <td>${row.period}</td>
+                                <td>${row.totalOrders}</td>
+                                <td>RM${Number(row.totalSales).toFixed(2)}</td>
+                            </tr>
+                        `;
+                    });
+                }
+
+                document.getElementById('totalOrders').textContent = totalOrders;
+                document.getElementById('totalSales').textContent = 'RM' + totalSales.toFixed(2);
+
+                if (data.bestSelling && data.bestSelling.length > 0) {
+                    document.getElementById('bestSeller').textContent = data.bestSelling[0].productName;
+                    document.getElementById('bestSellerQty').textContent = data.bestSelling[0].totalSold;
+
+                    data.bestSelling.forEach(item => {
+                        bestBody.innerHTML += `
+                            <tr>
+                                <td>${item.productName}</td>
+                                <td>${item.totalSold}</td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    bestBody.innerHTML = '<tr><td colspan="2">No best selling data.</td></tr>';
+                }
+            })
+            .catch(() => {
+                document.getElementById('salesTableBody').innerHTML =
+                    '<tr><td colspan="3">Failed to load report.</td></tr>';
+            });
+    }
+
+    document.getElementById('reportType').addEventListener('change', loadReport);
+    loadReport();
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const sidebarContainer = document.getElementById('sidebar-container');
+        if (sidebarContainer) {
+            fetch('admin-sidebar.html')
+                .then(res => res.text())
+                .then(html => {
+                    sidebarContainer.innerHTML = html;
+                    
+                    // Set active class
+                    const currentPath = window.location.pathname.split('/').pop() || 'admin.html';
+                    const hash = window.location.hash.substring(1);
+                    
+                    const navLinks = document.querySelectorAll('.sidebar-nav a');
+                    navLinks.forEach(link => {
+                        const page = link.getAttribute('data-page');
+                        const href = link.getAttribute('href');
+                        if (hash && (page === hash || href.includes('#' + hash))) {
+                            link.classList.add('active');
+                        } else if (!hash && (page === currentPath || href === currentPath || (page && page.replace('.html','') === currentPath.replace('.html','')))) {
+                            link.classList.add('active');
+                        } else {
+                            link.classList.remove('active');
+                        }
+                    });
+
+                    // Logout logic
+                    const logoutBtn = document.getElementById('adminLogoutBtn');
+                    if (logoutBtn) {
+                        logoutBtn.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            fetch('api/admin-logout.php')
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        window.location.href = 'admin-login.html';
+                                    }
+                                });
+                        });
+                    }
+                });
+        }
+    });
+</script>
+</body>
+</html>

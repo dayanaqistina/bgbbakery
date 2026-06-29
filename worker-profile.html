@@ -371,9 +371,10 @@
                     const navLinks = document.querySelectorAll('.sidebar-nav a');
                     navLinks.forEach(link => {
                         const page = link.getAttribute('data-page');
-                        if (hash && page === hash) {
+                        const href = link.getAttribute('href');
+                        if (hash && (page === hash || href.includes('#' + hash))) {
                             link.classList.add('active');
-                        } else if (!hash && page === currentPath) {
+                        } else if (!hash && (page === currentPath || href === currentPath || (page && page.replace('.html','') === currentPath.replace('.html','')))) {
                             link.classList.add('active');
                         } else {
                             link.classList.remove('active');

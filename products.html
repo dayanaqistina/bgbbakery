@@ -1,4 +1,4 @@
-<!-- Author: Dayana Qistina Binti Mat Zake -->
+<!-- Author: Dayana Qistina Binti Mat Zake
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,5 +15,95 @@
         <p>Opening the menu page.</p>
         <a class="button button-dark" href="menu.html">Go to menu</a>
     </main>
+</body>
+</html>
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Products - BGB Bakehouse</title>
+    <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class ="admin-body">
+<div class ="admin-layout">
+    <aside class="admin-sidebar">
+        <img class = "admin-logo" src="images/IMG_7322-removebg-preview.png" alt="BGB Bakehouse logo"/>
+        <nav>
+            <a href="admin.html">Dashboard</a>
+            <a href="admin.html#orders">Orders</a>
+            <a href="admin.html#customers">Customers</a>
+            <a class="active" href="products.html">Products</a>
+            <a href="reports.html">Reports</a>
+        </nav>
+    </aside>
+
+    <main class="admin-main">
+        <header class="admin-topbar">
+            <div>
+                <p class="eyebrow">Admin</p>
+                <h1>Products</h1>
+            </div>
+            <a class="button button-dark" href="admin.html">Back to Dashboard</a>
+        </header>
+
+        <section class="admin-panel">
+            <div class="panel-heading">
+                <h2>Product List</h2>
+                <button class="button button-light" type="button">Add Product</button>
+            </div>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Product Name</th>
+                    <th>Description</th>
+                    <th>Flavour Topping</th>
+                    <th>Price</th>
+                </tr>
+                </thead>
+                <tbody id="productTableBody">
+                <tr>
+                    <td colspan="5">Loading products...</td>
+                </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+</div>
+
+<script>
+    fetch('api/products.php')
+    .then(res => res.json())
+    .then(products => {
+        const tbody = document.getElementById('productTableBody');
+        tbody.innerHTML='';
+
+        products.forEach(product => {
+            tbody.innerHTML += `
+
+            <tr>
+                <td>${product.id}</td>
+                <td>${product.name}</td>
+                <td>${product.description}</td>
+                <td>${product.flavourTopping}</td>
+                <td>RM${Number(product.price).toFixed(2)}</td>
+            </tr>
+
+            `;
+
+        });
+    })
+
+    .catch(() => {
+        document.getElementById('productTableBody').innerHTML =
+        '<tr><td colspan="5">Failed to load products.</td></tr>';
+    });
+
+</script>
 </body>
 </html>

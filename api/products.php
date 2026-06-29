@@ -1,5 +1,4 @@
 <?php
-/* Author: Dayana Qistina Binti Mat Zake */
 // api/products.php
 
 header('Content-Type: application/json');
@@ -9,7 +8,7 @@ require_once __DIR__ . '/../database.php';
 try {
     $stmt = oci_parse($conn, "SELECT * FROM PRODUCT");
     oci_execute($stmt);
-    
+
     $result = [];
     while ($p = oci_fetch_assoc($stmt)) {
         $result[] = [
@@ -21,7 +20,7 @@ try {
             'price' => (float) $p['PRICE']
         ];
     }
-    
+
     echo json_encode($result);
 } catch (Exception $e) {
     http_response_code(500);

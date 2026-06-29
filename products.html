@@ -1,5 +1,6 @@
-<!-- Author: Dayana Qistina Binti Mat Zake
-<!DOCTYPE html>
+<!-- Author: Dayana Qistina Binti Mat Zake -->
+<!-- 
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
@@ -16,41 +17,103 @@
         <a class="button button-dark" href="menu.html">Go to menu</a>
     </main>
 </body>
-</html>
+</html> 
 -->
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Products - BGB Bakehouse</title>
-    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/admin.css" />
+    <style>
+        .admin-profile { gap: 12px !important; }
+        .admin-profile img {
+            width: 56px !important;
+            height: 56px !important;
+            border: 3px solid white !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08) !important;
+        }
+        .admin-profile-info strong {
+            font-size: 18px !important;
+            font-weight: 800 !important;
+            letter-spacing: -0.3px !important;
+        }
+        .admin-profile-info span {
+            font-size: 14px !important;
+            font-weight: 600 !important;
+            color: #777 !important;
+        }
+        .dashboard-header-title {
+            font-size: 34px !important;
+            font-weight: 900 !important;
+            letter-spacing: -1px !important;
+            color: #19150f;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .greeting-text {
+            font-size: 15px !important;
+            font-weight: 500 !important;
+            color: #666 !important;
+            margin-top: 4px !important;
+        }
+        .user-name-highlight {
+            color: #d49000;
+            font-weight: 700;
+        }
+    </style>
+    <script>
+        // Check admin authentication before showing the page
+        fetch('api/check-admin.php')
+            .then(res => res.json())
+            .then(data => {
+                if (!data.is_admin) {
+                    window.location.href = 'admin-login.html';
+                } else {
+                    document.body.style.display = 'flex';
+                    if (data.worker_name) {
+                        document.getElementById('adminNameLabel').textContent = data.worker_name;
+                        const hour = new Date().getHours();
+                        let timeGreeting = 'Good morning';
+                        if (hour >= 12 && hour < 18) timeGreeting = 'Good afternoon';
+                        else if (hour >= 18) timeGreeting = 'Good evening';
+                        document.getElementById('greetingName').innerHTML = timeGreeting + ', <span class="user-name-highlight">' + data.worker_name + '</span>! 👋';
+                    }
+                    if (data.worker_profile_image) {
+                        document.getElementById('adminProfileImg').src = data.worker_profile_image;
+                    }
+                }
+            })
+            .catch(() => {
+                window.location.href = 'admin-login.html';
+            });
+    </script>
 </head>
-<body class ="admin-body">
-<div class ="admin-layout">
-    <aside class="admin-sidebar">
-        <img class = "admin-logo" src="images/IMG_7322-removebg-preview.png" alt="BGB Bakehouse logo"/>
-        <nav>
-            <a href="admin.html">Dashboard</a>
-            <a href="admin.html#orders">Orders</a>
-            <a href="admin.html#customers">Customers</a>
-            <a class="active" href="products.html">Products</a>
-            <a href="reports.html">Reports</a>
-        </nav>
-    </aside>
+<body style="display: none;">
+    <!-- Sidebar -->
+    <div id="sidebar-container" style="width: 250px; flex-shrink: 0; background-color: #19150f; display: flex; flex-direction: column;"></div>
 
     <main class="admin-main">
         <header class="admin-topbar">
-            <div>
-                <p class="eyebrow">Admin</p>
-                <h1>Products</h1>
+            <div class="topbar-left">
+                <h1 class="dashboard-header-title">Products</h1>
+                <p id="greetingName" class="greeting-text">Welcome back!</p>
             </div>
-            <a class="button button-dark" href="admin.html">Back to Dashboard</a>
+            <div class="topbar-right">
+                <a href="worker-profile.html" class="admin-profile">
+                    <img id="adminProfileImg" src="images/IMG_7322-removebg-preview.png" alt="Profile" />
+                    <div class="admin-profile-info">
+                        <strong id="adminNameLabel">Admin</strong>
+                        <span>Worker</span>
+                    </div>
+                </a>
+            </div>
         </header>
 
-        <section class="admin-panel">
+        <section class="admin-panel" style="margin-top: 25px;">
             <div class="panel-heading">
                 <h2>Product List</h2>
                 <button class="button button-light" type="button">Add Product</button>
@@ -58,52 +121,91 @@
 
             <table>
                 <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Product Name</th>
-                    <th>Description</th>
-                    <th>Flavour Topping</th>
-                    <th>Price</th>
-                </tr>
+                    <tr>
+                        <th>ID</th>
+                        <th>Product Name</th>
+                        <th>Description</th>
+                        <th>Flavour Topping</th>
+                        <th>Price</th>
+                    </tr>
                 </thead>
                 <tbody id="productTableBody">
-                <tr>
-                    <td colspan="5">Loading products...</td>
-                </tr>
+                    <tr>
+                        <td colspan="5">Loading products...</td>
+                    </tr>
                 </tbody>
             </table>
         </section>
     </main>
-</div>
 
-<script>
-    fetch('api/products.php')
-    .then(res => res.json())
-    .then(products => {
-        const tbody = document.getElementById('productTableBody');
-        tbody.innerHTML='';
+    <script>
+        fetch('api/products.php')
+        .then(res => res.json())
+        .then(products => {
+            const tbody = document.getElementById('productTableBody');
+            tbody.innerHTML='';
 
-        products.forEach(product => {
-            tbody.innerHTML += `
-
-            <tr>
-                <td>${product.id}</td>
-                <td>${product.name}</td>
-                <td>${product.description}</td>
-                <td>${product.flavourTopping}</td>
-                <td>RM${Number(product.price).toFixed(2)}</td>
-            </tr>
-
-            `;
-
+            products.forEach(product => {
+                tbody.innerHTML += `
+                <tr> 
+                    <td>${product.id}</td>
+                    <td>${product.name}</td>
+                    <td>${product.description}</td>
+                    <td>${product.flavourTopping}</td>
+                    <td>RM${Number(product.price).toFixed(2)}</td>
+                </tr>
+                `;
+            });
+        })
+        .catch(() => {
+            document.getElementById('productTableBody').innerHTML =
+            '<tr><td colspan="5">Failed to load products.</td></tr>';
         });
-    })
+    </script>
 
-    .catch(() => {
-        document.getElementById('productTableBody').innerHTML =
-        '<tr><td colspan="5">Failed to load products.</td></tr>';
-    });
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const sidebarContainer = document.getElementById('sidebar-container');
+            if (sidebarContainer) {
+                fetch('admin-sidebar.html')
+                    .then(res => res.text())
+                    .then(html => {
+                        sidebarContainer.innerHTML = html;
+                        
+                        // Set active class
+                        const currentPath = window.location.pathname.split('/').pop() || 'admin.html';
+                        const hash = window.location.hash.substring(1);
+                        
+                        const navLinks = document.querySelectorAll('.sidebar-nav a');
+                        navLinks.forEach(link => {
+                            const page = link.getAttribute('data-page');
+                            const href = link.getAttribute('href');
+                            if (hash && (page === hash || href.includes('#' + hash))) {
+                                link.classList.add('active');
+                            } else if (!hash && (page === currentPath || href === currentPath || (page && page.replace('.html','') === currentPath.replace('.html','')))) {
+                                link.classList.add('active');
+                            } else {
+                                link.classList.remove('active');
+                            }
+                        });
 
-</script>
+                        // Logout logic
+                        const logoutBtn = document.getElementById('adminLogoutBtn');
+                        if (logoutBtn) {
+                            logoutBtn.addEventListener('click', (e) => {
+                                e.preventDefault();
+                                fetch('api/admin-logout.php')
+                                    .then(res => res.json())
+                                    .then(data => {
+                                        if (data.success) {
+                                            window.location.href = 'admin-login.html';
+                                        }
+                                    });
+                            });
+                        }
+                    });
+            }
+        });
+    </script>
 </body>
 </html>

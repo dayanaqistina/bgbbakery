@@ -90,8 +90,13 @@ try {
         $whereClauses[] = "TO_CHAR(o.ORDER_DATE, 'YYYY-MM') = :gmonth";
     }
     
+    $cleanNum = $searchTerm ? preg_replace('/[^0-9]/', '', $searchTerm) : '';
     if ($searchTerm) {
-        $whereClauses[] = "(TO_CHAR(o.ORDER_ID) LIKE :search OR c.CUST_ID LIKE :search OR LOWER(c.CUST_NAME) LIKE LOWER(:search))";
+        if (!empty($cleanNum)) {
+            $whereClauses[] = "(UPPER('ORD' || LPAD(TO_CHAR(o.ORDER_ID), 4, '0')) LIKE UPPER(:search) OR TO_CHAR(o.ORDER_ID) LIKE :raw_search OR UPPER(c.CUST_ID) LIKE UPPER(:search) OR LOWER(c.CUST_NAME) LIKE LOWER(:search))";
+        } else {
+            $whereClauses[] = "(UPPER('ORD' || LPAD(TO_CHAR(o.ORDER_ID), 4, '0')) LIKE UPPER(:search) OR UPPER(c.CUST_ID) LIKE UPPER(:search) OR LOWER(c.CUST_NAME) LIKE LOWER(:search))";
+        }
     }
     
     if (count($whereClauses) > 0) {
@@ -104,8 +109,12 @@ try {
     if ($globalDate) oci_bind_by_name($stmt, ':gdate', $globalDate);
     if ($globalMonth) oci_bind_by_name($stmt, ':gmonth', $globalMonth);
     if ($searchTerm) {
-        $searchParam = '%' . $searchTerm . '%';
+        $searchParam = '%' . trim($searchTerm) . '%';
         oci_bind_by_name($stmt, ':search', $searchParam);
+        if (!empty($cleanNum)) {
+            $rawSearchParam = '%' . $cleanNum . '%';
+            oci_bind_by_name($stmt, ':raw_search', $rawSearchParam);
+        }
     }
     oci_execute($stmt);
     
@@ -117,7 +126,7 @@ try {
             'type' => $row['ORDER_TYPE'],
             'items' => $row['ITEMS'],
             'status' => $row['ORDER_STATUS'],
-            'total' => $row['TOTAL'] ? (float)$row['TOTAL'] : 0,
+            'total' => isset($row['TOTAL_AMOUNT']) ? (float)$row['TOTAL_AMOUNT'] : 0,
             'time' => $row['ORDER_TIME']
         ];
     }
